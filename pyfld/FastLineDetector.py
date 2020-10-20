@@ -505,13 +505,12 @@ class FastLineDetector:
             # Extending line
             for j in range(self.length_threshold+1, total-i):
                 pt = Point(points[i+j].x, points[i+j].y)
-                dist = self.dist_point_line(Point(a[0], a[1]), Point(b[0], b[1]), pt)
+                dist = self.dist_point_line(a, b, pt)
                 if dist > self.distance_threshold:
                     vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
-                    a = [x.item(), y.item(), 1]
-                    b = [x.item() + vx.item(), y.item() + vy.item(), 1]
-                    l = np.cross(a, b)
-                    dist2nd = self.dist_point_line(Point(a[0], a[1]), Point(b[0], b[1]), pt)
+                    a = Point(x.item(), y.item())
+                    b = Point(x.item() + vx.item(), y.item() + vy.item())
+                    dist2nd = self.dist_point_line(a, b, pt)
                     if dist2nd > self.distance_threshold:
                         j -= 1
                         break
@@ -550,16 +549,16 @@ class FastLineDetector:
 
         xk = xk/xk[2]
 
-        if xk[0] < 0:
-            pt_x = 0
-        elif xmax is not None and xk[0] >= xmax:
+        if xk[0] < xmin:
+            pt_x = xmin
+        elif xmax is not None and xk[0] > xmax:
             pt_x = xmax
         else:
             pt_x = xk[0]
 
-        if xk[1] < 0:
-            pt_y = 0
-        elif ymax is not None and xk[1] >= ymax:
+        if xk[1] < xmin:
+            pt_y = xmin
+        elif ymax is not None and xk[1] > ymax:
             pt_y = ymax
         else:
             pt_y = xk[1]
