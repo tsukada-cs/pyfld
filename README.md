@@ -11,4 +11,4 @@ This package is designed to allow fine tuning of parameters based on this approa
 
 ## Reference
 * J. Han Lee, S. Lee, G. Zhang, J. Lim, W. Kyun Chung, I. Hong Suh. "Outdoor place recognition in urban environments using straight lines." In 2014 IEEE International Conference on Robotics and Automation (ICRA), pp.5550–5557. IEEE, 2014. [[Link to PDF]](http://cvlab.hanyang.ac.kr/~jwlim/files/icra14linerec.pdf)
-* H. Bay, V. Ferraris, and L. Van Gool, “Wide-Baseline Stereo Matching with Line Segments.” In Proc. of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), vol.1, no., pp.329-336, June 2005.
+* H. Bay, V. Ferraris, and L. Van Gool, “Wide-Baseline Stereo Matching with Line Segments.” In Proc. of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), vol.1, no., pp.329-336, June 2005. [[Link to PDF]](https://homes.esat.kuleuven.be/~konijn/publications/2005/CVPR-HB-05.pdf)
