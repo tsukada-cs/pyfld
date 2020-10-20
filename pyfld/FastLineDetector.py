@@ -101,7 +101,7 @@ class FastLineDetector:
         if self.canny_aperture_size == 0:
             canny = src
         else:
-            canny = cv2.Canny(src, self.canny_th1, self.canny_th2, self.canny_aperture_size)
+            canny = cv2.Canny(src, self.canny_th1, self.canny_th2, apertureSize=self.canny_aperture_size)
         
         canny[:6, :6] = 0
         canny[self._h-5:, self._w-5:] = 0
