@@ -117,7 +117,7 @@ class TestLineSegment(unittest.TestCase):
                   Point(2,4), Point(3,5), Point(4,5), Point(5,5)]
         segs = [Segment(0,0,0,1), Segment(1,2,1,3), Segment(2,4,3,5), Segment(4,5,5,5)]
         segments = fld.extract_segments(points)
-        self.assertEqual(segments, segs)
+        self.assertTrue(np.all(np.round(segments) == np.array(segs)))
 
     def test_extract_segments_2(self, *mocks):
         fld = FastLineDetector(length_threshold=2, distance_threshold=0)
@@ -125,15 +125,14 @@ class TestLineSegment(unittest.TestCase):
                   Point(2,4), Point(3,5), Point(4,5), Point(5,5)]
         segs = [Segment(1,3,3,5)]
         segments = fld.extract_segments(points)
-        self.assertEqual(segments, segs)
+        self.assertTrue(np.all(np.round(segments) == np.array(segs)))
 
     def test_extract_segments_3(self, *mocks):
         fld = FastLineDetector(length_threshold=10, distance_threshold=0)
         points = [Point(0,0), Point(0,1), Point(1,2), Point(1,3),
                   Point(2,4), Point(3,5), Point(4,5), Point(5,5)]
-        segs = []
         segments = fld.extract_segments(points)
-        self.assertEqual(segments, segs)
+        self.assertEqual(segments, [])
 
     def test_dist_point_line_1(self, *mocks):
         p1 = Point(0,0)

@@ -111,41 +111,41 @@ class FastLineDetector:
             return segments_all
 
         segments_tmp = []
-        cs, rs = np.where(canny.T != 0)
-        for r, c in zip(rs, cs):
-            # Skip for non-seeds
-            if canny[r,c] == 0:
-                continue
-            # Found seeds
-            pt = Point(c,r)
-            # Get point chain
-            points, canny = self.get_chained_points(canny, pt)
-
-            if len(points) - 1 < self.length_threshold:
-                points = []
-                continue
-            
-            segments = self.extract_segments(points, xmin=0, xmax=self._w-1, ymin=0, ymax=self._h-1)
-
-            if len(segments) == 0:
-                points = []
-                continue
-
-            for i in range(len(segments)):
-                seg = segments[i]
-                seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
-                if seg_length < self.length_threshold:
+        # cs, rs = np.where(canny.T != 0)
+        for r in range(self._h):
+            for c in range(self._w):
+                # Skip for non-seeds
+                if canny[r,c] == 0:
                     continue
-                if (seg.x1 <= 5 and seg.x2 <= 5) or \
-                   (seg.y1 <= 5 and seg.y2 <= 5) or \
-                   (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or \
-                   (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
-                   continue
-                if self.do_merge is False:
-                    segments_all.append(seg)
-                segments_tmp.append(seg)
-            points = []
-            segments = []
+                # Found seeds
+                pt = Point(c,r)
+                # Get point chain
+                points, canny = self.get_chained_points(canny, pt)
+
+                if len(points) - 1 < self.length_threshold:
+                    points = []
+                    continue
+                
+                segments = self.extract_segments(points, xmin=0, xmax=self._w-1, ymin=0, ymax=self._h-1)
+
+                if len(segments) == 0:
+                    points = []
+                    continue
+
+                for seg in segments:
+                    seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
+                    if seg_length < self.length_threshold:
+                        continue
+                    if (seg.x1 <= 5 and seg.x2 <= 5) or \
+                    (seg.y1 <= 5 and seg.y2 <= 5) or \
+                    (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or \
+                    (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
+                        continue
+                    if self.do_merge is False:
+                        segments_all.append(seg)
+                    segments_tmp.append(seg)
+                points = []
+                segments = []
         
         if self.do_merge is False:
             return segments_all
@@ -327,7 +327,7 @@ class FastLineDetector:
         delta2x = delta2xg * np.cos(thr) + xg
         delta2y = delta2xg * np.sin(thr) + yg
 
-        seg_merged = Segment(round(delta1x,3), round(delta1y,3), round(delta2x,3), round(delta2y,3))
+        seg_merged = Segment(delta1x, delta1y, delta2x, delta2y)
         return seg_merged
 
     def get_point_chain(self, img):
@@ -345,16 +345,18 @@ class FastLineDetector:
         point_chain = []
         if np.all(img == 0):
             return point_chain
-        rs, cs = np.where(img != 0)
-        for r, c in zip(rs, cs):
-            # Skip for non-seeds
-            if img[r,c] == 0:
-                continue
-            # Found seeds
-            pt = Point(c,r)
-            # Get point chain
-            points, img = self.get_chained_points(img, pt)
-            point_chain.append(points)
+        # rs, cs = np.where(img != 0)
+        # for r, c in zip(rs, cs):
+        for r in img.shape[0]:
+            for c in img.shape[1]:
+                # Skip for non-seeds
+                if img[r,c] == 0:
+                    continue
+                # Found seeds
+                pt = Point(c,r)
+                # Get point chain
+                points, img = self.get_chained_points(img, pt)
+                point_chain.append(points)
         return point_chain
 
     def get_chained_points(self, img, pt):
@@ -425,7 +427,6 @@ class FastLineDetector:
                    180:(-1,-1), 225:(-1,0), 270:(-1,1), 315:(0,1)} # Clockwise from lower right
 
         min_dir_diff = 315.0
-        consistent_direction = 0
         for i in (0, 45, 90, 135, 180, 225, 270, 315):
             ci = pt.x + indices[i][1]
             ri = pt.y + indices[i][0]
@@ -521,7 +522,7 @@ class FastLineDetector:
             b = Point(x.item() + vx.item(), y.item() + vy.item())
             e1 = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
             e2 = self.get_incident_point(a, b, pe, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
-            segments.append(Segment(round(e1.x,2), round(e1.y,2), round(e2.x,2), round(e2.y,2)))
+            segments.append(Segment(e1.x, e1.y, e2.x, e2.y))
             skip = j
         return segments
 
@@ -556,8 +557,8 @@ class FastLineDetector:
         else:
             pt_x = xk[0]
 
-        if xk[1] < xmin:
-            pt_y = xmin
+        if xk[1] < ymin:
+            pt_y = ymin
         elif ymax is not None and xk[1] > ymax:
             pt_y = ymax
         else:
