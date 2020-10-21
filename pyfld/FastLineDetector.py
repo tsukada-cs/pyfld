@@ -1,3 +1,5 @@
+import copy
+
 import cv2
 import numpy as np
 
@@ -101,7 +103,7 @@ class FastLineDetector:
         if self.canny_aperture_size == 0:
             canny = src
         else:
-            canny = cv2.Canny(src, self.canny_th1, self.canny_th2, apertureSize=self.canny_aperture_size)
+            canny = cv2.Canny(image=src, threshold1=self.canny_th1, threshold2=self.canny_th2, apertureSize=self.canny_aperture_size)
         
         canny[:6, :6] = 0
         canny[self._h-5:, self._w-5:] = 0
@@ -167,6 +169,240 @@ class FastLineDetector:
                 jth = ith - 1
         segments_all = segments_tmp
         return segments_all
+
+    def get_point_chain(self, img):
+        """
+        Parameters
+        ----------
+        img : numpy ndarray
+            Input edge image.
+        
+        Reterns
+        -------
+        point_chain : list
+            Extracted point chain.
+        """
+        point_chain = []
+        if np.all(img == 0):
+            return point_chain
+        # rs, cs = np.where(img != 0)
+        # for r, c in zip(rs, cs):
+        for r in img.shape[0]:
+            for c in img.shape[1]:
+                # Skip for non-seeds
+                if img[r,c] == 0:
+                    continue
+                # Found seeds
+                pt = Point(c,r)
+                # Get point chain
+                points, img = self.get_chained_points(img, pt)
+                point_chain.append(points)
+        return point_chain
+
+    def get_chained_points(self, img, pt):
+        """
+        Parameters
+        ----------
+        img : numpy ndarray
+            Input edge image.
+        pt : Point
+            Start point to search chained points.
+        
+        Reterns
+        -------
+        points : list of Point
+            Extracted chained points.
+        img : numpy ndarray
+            Points removed image.
+        """
+        if img[pt.y, pt.x] == 0:
+            raise ValueError("img[pt.y, pt.x] must not be 0")
+        points = [pt]
+        img[pt.y, pt.x] = 0
+
+        direction = 0.0
+        step = 0
+        getting = True
+        while(getting):
+            pt, direction = self.get_chained_point(img, pt, direction, step)
+            if pt is None:
+                getting = False
+                break
+            points.append(pt)
+            step += 1
+            img[pt.y, pt.x] = 0
+        return points, img
+
+    def get_chained_point(self, img, pt, direction, step):
+        """
+        Find the neighboring edge point.
+        Edge points closer to the direction are given priority.
+        However, when step=0, it does not depend on the direction.
+        Returns (None, None) if no edge point is found.
+
+        Parameters
+        ----------
+        img : numpy ndarray
+            Input edge image.
+        pt : Point
+            Start point to search the neighboring edge point.
+        direction : int or float
+            Previous search direction.
+        step : int
+            Current number of searches.
+        
+        Reterns
+        -------
+        point : Point
+            Extracted neighbor chained point.
+        direction : int or float
+            Recalculated direction.
+        """
+        def direction_fixer(dir):
+            if dir <= 180:
+                return dir
+            return dir - 360
+        indices = {0:(1,1), 45:(1,0), 90:(1,-1), 135:(0,-1),
+                   180:(-1,-1), 225:(-1,0), 270:(-1,1), 315:(0,1)} # Clockwise from lower right
+
+        min_dir_diff = 315.0
+        for i in (0, 45, 90, 135, 180, 225, 270, 315):
+            ci = pt.x + indices[i][1]
+            ri = pt.y + indices[i][0]
+            if ri < 0 or ri == img.shape[0] or ci < 0 or ci == img.shape[1]:
+                continue
+            if img[ri, ci] == 0:
+                continue
+            if step == 0:
+                chained_pt = Point(ci, ri)
+                direction = direction_fixer(i)
+                return chained_pt, direction
+            if step > 0:
+                curr_dir = direction_fixer(i)
+                dir_diff = abs(curr_dir - direction)
+                dir_diff = abs(direction_fixer(dir_diff))
+                if dir_diff <= min_dir_diff:
+                    min_dir_diff = dir_diff
+                    consistent_pt = Point(ci, ri)
+                    consistent_direction = direction_fixer(i)
+
+        if min_dir_diff < 90.0:
+            chained_pt = consistent_pt
+            direction = (direction * step + consistent_direction) / (step + 1)
+            return chained_pt, direction
+        return None, None
+
+    def extract_segments(self, points, xmin=0, xmax=None, ymin=0, ymax=None):
+        """
+        Extract segments from point chain.
+
+        Parameters
+        ----------
+        points : list of Point
+            Point chain for extraction.
+        xmin : int or float, default 0
+            Minimum x. Segment's x smaller than xmin are rounded to xmin.
+        xmax : int or float, optional
+            Minimum x. Segment's x larger than xmax are rounded to xmax.
+        ymin : int or float, default 0
+            Minimum y. Segment's y smaller than ymin are rounded to ymin.
+        ymin : int or float, optional
+            Minimum y. Segment's y smaller than ymax are rounded to ymax.
+        """
+        segments = []
+        total = len(points)
+        skip = 0
+        for i in range(total-self.length_threshold):
+            if skip > 0:
+                skip -= 1
+                continue
+
+            ps = points[i]
+            pe = points[i+self.length_threshold]
+
+            is_line = True
+            l_points = [ps]
+            for j in range(1, self.length_threshold):
+                pt = Point(points[i+j].x, points[i+j].y)
+                dist = self.dist_point_line(ps, pe, pt)
+                if dist > self.distance_threshold:
+                    is_line = False
+                    break
+                l_points.append(pt)
+
+            # Line check fail, test next point
+            if is_line is False:
+                continue
+
+            l_points.append(pe)
+
+            vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
+            a = Point(x.item(), y.item())
+            b = Point(x.item() + vx.item(), y.item() + vy.item())
+            ps = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+
+            # Extending line
+            for j in range(self.length_threshold+1, total-i):
+                pt = Point(points[i+j].x, points[i+j].y)
+                dist = self.dist_point_line(a, b, pt)
+                if dist > self.distance_threshold:
+                    vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
+                    a = Point(x.item(), y.item())
+                    b = Point(x.item() + vx.item(), y.item() + vy.item())
+                    dist2nd = self.dist_point_line(a, b, pt)
+                    if dist2nd > self.distance_threshold:
+                        j -= 1
+                        break
+                pe = pt
+                l_points.append(pt)
+            vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
+            a = Point(x.item(), y.item())
+            b = Point(x.item() + vx.item(), y.item() + vy.item())
+            e1 = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+            e2 = self.get_incident_point(a, b, pe, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+            segments.append(Segment(e1.x, e1.y, e2.x, e2.y))
+            skip = j
+        return segments
+
+    @staticmethod
+    def dist_point_line(p1, p2, p3):
+        """
+        Calcurate the distance between the line (p1 to p2) and point (p3).
+        """
+        u = np.array([p2.x - p1.x, p2.y - p1.y])
+        v = np.array([p3.x - p1.x, p3.y - p1.y])
+        l = abs(np.cross(u, v)/ np.linalg.norm(u))
+        return l
+
+    @staticmethod
+    def get_incident_point(p1, p2, p3, xmin=0, xmax=None, ymin=0, ymax=None):
+        """
+        Calcurate the incident point on the line (p1 to p2) from point (p3).
+        """
+        l = np.cross([p1.x, p1.y, 1.0], [p2.x, p2.y, 1.0])
+        lh = [l[0], l[1], 0.0]
+        xk = [p3.x, p3.y, 1.0]
+
+        lk = np.cross(xk, lh)
+        xk = np.cross(lk, l)
+
+        xk = xk/xk[2]
+
+        if xk[0] < xmin:
+            pt_x = xmin
+        elif xmax is not None and xk[0] > xmax:
+            pt_x = xmax
+        else:
+            pt_x = xk[0]
+
+        if xk[1] < ymin:
+            pt_y = ymin
+        elif ymax is not None and xk[1] > ymax:
+            pt_y = ymax
+        else:
+            pt_y = xk[1]
+
+        return Point(pt_x, pt_y)
 
     def adjust_left_of_segment_to_be_higher(self, src, seg, gap=1, num_points=10):
         """
@@ -329,239 +565,3 @@ class FastLineDetector:
 
         seg_merged = Segment(delta1x, delta1y, delta2x, delta2y)
         return seg_merged
-
-    def get_point_chain(self, img):
-        """
-        Parameters
-        ----------
-        img : numpy ndarray
-            Input edge image.
-        
-        Reterns
-        -------
-        point_chain : list
-            Extracted point chain.
-        """
-        point_chain = []
-        if np.all(img == 0):
-            return point_chain
-        # rs, cs = np.where(img != 0)
-        # for r, c in zip(rs, cs):
-        for r in img.shape[0]:
-            for c in img.shape[1]:
-                # Skip for non-seeds
-                if img[r,c] == 0:
-                    continue
-                # Found seeds
-                pt = Point(c,r)
-                # Get point chain
-                points, img = self.get_chained_points(img, pt)
-                point_chain.append(points)
-        return point_chain
-
-    def get_chained_points(self, img, pt):
-        """
-        Parameters
-        ----------
-        img : numpy ndarray
-            Input edge image.
-        pt : Point
-            Start point to search chained points.
-        
-        Reterns
-        -------
-        points : list of Point
-            Extracted chained points.
-        img : numpy ndarray
-            Points removed image.
-        """
-        if img[pt.y, pt.x] == 0:
-            raise ValueError("img[pt.y, pt.x] must not be 0")
-        img[pt.y, pt.x] = 0
-
-        points = []
-        points.append(pt)
-        direction = 0
-        step = 0
-        getting = True
-        while(getting):
-            pt, direction = self.get_chained_point(img, pt, direction, step)
-            if pt is None:
-                getting = False
-                break
-            points.append(pt)
-            step += 1
-            img[pt.y, pt.x] = 0
-        return points, img
-
-    def get_chained_point(self, img, pt, direction, step):
-        """
-        Find the neighboring edge point.
-        Edge points closer to the direction are given priority.
-        However, when step=0, it does not depend on the direction.
-        Returns (None, None) if no edge point is found.
-
-        Parameters
-        ----------
-        img : numpy ndarray
-            Input edge image.
-        pt : Point
-            Start point to search the neighboring edge point.
-        direction : int or float
-            Previous search direction.
-        step : int
-            Current number of searches.
-        
-        Reterns
-        -------
-        point : Point
-            Extracted neighbor chained point.
-        direction : int or float
-            Recalculated direction.
-        """
-        def direction_fixer(dir):
-            if dir <= 180:
-                return dir
-            return dir - 360
-        indices = {0:(1,1), 45:(1,0), 90:(1,-1), 135:(0,-1),
-                   180:(-1,-1), 225:(-1,0), 270:(-1,1), 315:(0,1)} # Clockwise from lower right
-
-        min_dir_diff = 315.0
-        for i in (0, 45, 90, 135, 180, 225, 270, 315):
-            ci = pt.x + indices[i][1]
-            ri = pt.y + indices[i][0]
-            if ri < 0 or ri == img.shape[0] or ci < 0 or ci == img.shape[1]:
-                continue
-            if img[ri, ci] == 0:
-                continue
-            if step == 0:
-                chained_pt = Point(ci, ri)
-                direction = direction_fixer(i)
-                return chained_pt, direction
-            if step > 0:
-                curr_dir = direction_fixer(i)
-                dir_diff = abs(curr_dir - direction)
-                dir_diff = abs(direction_fixer(dir_diff))
-                if dir_diff <= min_dir_diff:
-                    min_dir_diff = dir_diff
-                    consistent_pt = Point(ci, ri)
-                    consistent_direction = direction_fixer(i)
-            if min_dir_diff < 90.0:
-                chained_pt = consistent_pt
-                direction = (direction * step + consistent_direction) / (step + 1)
-                return chained_pt, direction
-        return None, None
-
-    def extract_segments(self, points, xmin=0, xmax=None, ymin=0, ymax=None):
-        """
-        Extract segments from point chain.
-
-        Parameters
-        ----------
-        points : list of Point
-            Point chain for extraction.
-        xmin : int or float, default 0
-            Minimum x. Segment's x smaller than xmin are rounded to xmin.
-        xmax : int or float, optional
-            Minimum x. Segment's x larger than xmax are rounded to xmax.
-        ymin : int or float, default 0
-            Minimum y. Segment's y smaller than ymin are rounded to ymin.
-        ymin : int or float, optional
-            Minimum y. Segment's y smaller than ymax are rounded to ymax.
-        """
-        segments = []
-        total = len(points)
-        skip = 0
-        # iterator = np.arange(total-self.length_threshold)
-        for i in range(total-self.length_threshold):
-            if skip > 0:
-                skip -= 1
-                continue
-
-            ps = points[i]
-            pe = points[i+self.length_threshold]
-
-            is_line = True
-            l_points = [ps]
-            for j in range(1, self.length_threshold):
-                pt = Point(points[i+j].x, points[i+j].y)
-                dist = self.dist_point_line(ps, pe, pt)
-                if dist > self.distance_threshold:
-                    is_line = False
-                    break
-                l_points.append(pt)
-
-            # Line check fail, test next point
-            if is_line is False:
-                continue
-
-            l_points.append(pe)
-
-            vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
-            a = Point(x.item(), y.item())
-            b = Point(x.item() + vx.item(), y.item() + vy.item())
-
-            ps = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
-
-            # Extending line
-            for j in range(self.length_threshold+1, total-i):
-                pt = Point(points[i+j].x, points[i+j].y)
-                dist = self.dist_point_line(a, b, pt)
-                if dist > self.distance_threshold:
-                    vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
-                    a = Point(x.item(), y.item())
-                    b = Point(x.item() + vx.item(), y.item() + vy.item())
-                    dist2nd = self.dist_point_line(a, b, pt)
-                    if dist2nd > self.distance_threshold:
-                        j -= 1
-                        break
-                pe = pt
-                l_points.append(pt)
-            vx, vy, x, y = cv2.fitLine(np.array(l_points).astype(np.float32), cv2.DIST_L2, 0, 0.01, 0.01)
-            a = Point(x.item(), y.item())
-            b = Point(x.item() + vx.item(), y.item() + vy.item())
-            e1 = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
-            e2 = self.get_incident_point(a, b, pe, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
-            segments.append(Segment(e1.x, e1.y, e2.x, e2.y))
-            skip = j
-        return segments
-
-    @staticmethod
-    def dist_point_line(p1, p2, p3):
-        """
-        Calcurate the distance between the line (p1 to p2) and point (p3).
-        """
-        u = np.array([p2.x - p1.x, p2.y - p1.y])
-        v = np.array([p3.x - p1.x, p3.y - p1.y])
-        l = abs(np.cross(u, v)/ np.linalg.norm(u))
-        return l
-
-    @staticmethod
-    def get_incident_point(p1, p2, p3, xmin=0, xmax=None, ymin=0, ymax=None):
-        """
-        Calcurate the incident point on the line (p1 to p2) from point (p3).
-        """
-        l = np.cross([p1.x, p1.y, 1], [p2.x, p2.y, 1])
-        lh = [l[0], l[1], 0]
-        xk = [p3.x, p3.y, 1]
-
-        lk = np.cross(xk, lh)
-        xk = np.cross(lk, l)
-
-        xk = xk/xk[2]
-
-        if xk[0] < xmin:
-            pt_x = xmin
-        elif xmax is not None and xk[0] > xmax:
-            pt_x = xmax
-        else:
-            pt_x = xk[0]
-
-        if xk[1] < ymin:
-            pt_y = ymin
-        elif ymax is not None and xk[1] > ymax:
-            pt_y = ymax
-        else:
-            pt_y = xk[1]
-
-        return Point(pt_x, pt_y)
