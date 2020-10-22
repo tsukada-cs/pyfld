@@ -53,6 +53,12 @@ class TestFastLineDetector(unittest.TestCase):
         fld = FastLineDetector(distance_threshold=40)
         self.assertEqual(len(segments), 0)
 
+    def test_FLD_on_the_corner(self):
+        fld = FastLineDetector(length_threshold=40)
+        img = np.fliplr(np.eye(30)).astype(np.uint8)
+        segments = fld.detect(img)
+        self.assertEqual(len(segments), 0)
+
     def test_get_point_chain(self):
         fld = FastLineDetector()
         img = np.eye(5) + np.fliplr(np.eye(5))
