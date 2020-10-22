@@ -223,6 +223,15 @@ class TestFastLineDetector(unittest.TestCase):
         p3 = Point(0,4)
         pt = FastLineDetector.get_incident_point(p1, p2, p3)
         self.assertEqual(pt, Point(2,2))
+
+    def test_incidet_point_3(self):
+        p1 = Point(0,0)
+        p2 = Point(4,4)
+        p3 = Point(0,4)
+        pt = FastLineDetector.get_incident_point(p1, p2, p3, xmax=1, ymax=1)
+        self.assertEqual(pt, Point(1,1))
+        pt = FastLineDetector.get_incident_point(p1, p2, p3, xmin=3, ymin=3)
+        self.assertEqual(pt, Point(3,3))
     
     def test_merge_segments_1(self):
         seg1 = Segment(0,0,3,0)
