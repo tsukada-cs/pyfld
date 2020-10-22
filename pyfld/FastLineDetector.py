@@ -105,7 +105,7 @@ class FastLineDetector:
         else:
             canny = cv2.Canny(image=src, threshold1=self.canny_th1, threshold2=self.canny_th2, apertureSize=self.canny_aperture_size)
         
-        canny[:6, :6] = 0
+        canny[:5, :5] = 0
         canny[self._h-5:, self._w-5:] = 0
 
         segments_all = []
@@ -126,8 +126,9 @@ class FastLineDetector:
                 if len(points) - 1 < self.length_threshold:
                     points = []
                     continue
-                
+                print(points)
                 segments = self.extract_segments(points, xmin=0, xmax=self._w-1, ymin=0, ymax=self._h-1)
+                print(segments)
 
                 if len(segments) == 0:
                     points = []
@@ -136,11 +137,11 @@ class FastLineDetector:
                 for seg in segments:
                     seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
                     if seg_length < self.length_threshold:
+                        print("cont1")
                         continue
-                    if (seg.x1 <= 5 and seg.x2 <= 5) or \
-                        (seg.y1 <= 5 and seg.y2 <= 5) or \
-                        (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or \
-                        (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
+                    if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or \
+                        (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
+                        print("cont2")
                         continue
                     if self.do_merge is False:
                         segments_all.append(seg)
