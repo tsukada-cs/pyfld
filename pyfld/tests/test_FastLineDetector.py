@@ -186,7 +186,7 @@ class TestFastLineDetector(unittest.TestCase):
 
         seg = Segment(2,0,2,5)
         seg_adjusted = fld.adjust_left_of_segment_to_be_higher(img, seg)
-        self.assertEqual(seg0_adjusted, Segment(2,5,2,0))
+        self.assertEqual(seg_adjusted, Segment(2,5,2,0))
 
     def test_dist_point_line_1(self):
         p1 = Point(0,0)
