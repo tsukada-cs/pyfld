@@ -46,14 +46,15 @@ class TestFastLineDetector(unittest.TestCase):
         self.assertEqual(len(segments), 1)
     
     def test_FLD_with_high_threshold(self):
-        fld = FastLineDetector(length_threshold=40)
+        fld = FastLineDetector(length_threshold=40, canny_aperture_size=0)
         img = np.eye(30).astype(np.uint8)
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
 
-    def test_FLD_on_the_corner(self):
-        fld = FastLineDetector(length_threshold=2)
-        img = np.fliplr(np.eye(30)).astype(np.uint8)
+    def test_FLD_on_the_edge(self):
+        fld = FastLineDetector(length_threshold=2, canny_aperture_size=0)
+        img = np.zeros([10,10])
+        img[:,0] = 1
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
 
