@@ -17,21 +17,11 @@ except IOError:
 def _requires_from_file(filename):
     return open(filename).read().splitlines()
 
-
-# version
-here = os.path.dirname(os.path.abspath(__file__))
-version = next((line.split('=')[1].strip().replace("'", '')
-                for line in open(os.path.join(here, 'pyfld', '__init__.py'))
-                if line.startswith('__version__ = ')
-                ), '0.0.dev0')
-
 extensions = []
-# extensions.append(Extension(name='hctpy.utils.parallax_mod', sources=['hctpy/utils/parallax_mod.f90']))
-
 
 setup(
     name="pyfld",
-    version=version,
+    version="0.2.0",
     url='https://github.com/tsukada-cs/pyfld',
     author='Taiga Tsukada',
     author_email='tsukada.cs@gmail.com',
@@ -39,6 +29,7 @@ setup(
     maintainer_email='tsukada.cs@gmail.com',
     description='pyfld',
     long_description=readme,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     ext_modules=extensions,
     install_requires=_requires_from_file('requirements.txt'),
