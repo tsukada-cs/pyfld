@@ -113,7 +113,6 @@ class FastLineDetector:
             return segments_all
 
         segments_tmp = []
-        # cs, rs = np.where(canny.T != 0)
         for r in range(self._h):
             for c in range(self._w):
                 # Skip for non-seeds
@@ -139,9 +138,9 @@ class FastLineDetector:
                     if seg_length < self.length_threshold:
                         continue
                     if (seg.x1 <= 5 and seg.x2 <= 5) or \
-                    (seg.y1 <= 5 and seg.y2 <= 5) or \
-                    (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or \
-                    (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
+                        (seg.y1 <= 5 and seg.y2 <= 5) or \
+                        (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or \
+                        (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
                     if self.do_merge is False:
                         segments_all.append(seg)
