@@ -1,6 +1,6 @@
 # pyfld
 [![Build Status](https://travis-ci.com/tsukada-cs/pyfld.svg?branch=main)](https://travis-ci.com/tsukada-cs/pyfld)
-[![Coverage Status](https://coveralls.io/repos/github/tsukada-cs/pyfld/badge.svg?)](https://coveralls.io/github/tsukada-cs/pyfld?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/tsukada-cs/pyfld/badge.svg)](https://coveralls.io/github/tsukada-cs/pyfld?branch=main)
 
 FastLineDetector implemented in Python.
 
