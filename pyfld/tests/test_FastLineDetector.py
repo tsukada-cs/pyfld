@@ -59,25 +59,18 @@ class TestFastLineDetector(unittest.TestCase):
         self.assertEqual(len(segments), 0)
 
     def test_FLD_empty_segments(self):
-        fld = FastLineDetector(length_threshold=3, distance_threshold=5, canny_aperture_size=0)
+        fld = FastLineDetector(length_threshold=6, distance_threshold=5, canny_aperture_size=0)
         img = np.array([
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,1,1,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,1,0,0,0,0,0],
-            [0,0,0,0,0,0,0,1,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0]
+            [1,1,1,0,0],
+            [0,0,0,1,0],
+            [0,0,0,0,1],
+            [0,0,0,0,1],
+            [0,0,0,0,1]
         ])
+        img = np.pad(img, 5, mode="constant")
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
-        fld = FastLineDetector(length_threshold=2, distance_threshold=0, canny_aperture_size=0)
+        fld = FastLineDetector(length_threshold=4, distance_threshold=0, canny_aperture_size=0)
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
 
