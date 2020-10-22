@@ -126,9 +126,8 @@ class FastLineDetector:
                 if len(points) - 1 < self.length_threshold:
                     points = []
                     continue
-                print(points)
+
                 segments = self.extract_segments(points, xmin=0, xmax=self._w-1, ymin=0, ymax=self._h-1)
-                print(segments)
 
                 if len(segments) == 0:
                     points = []
@@ -137,11 +136,9 @@ class FastLineDetector:
                 for seg in segments:
                     seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
                     if seg_length < self.length_threshold:
-                        print("cont1")
                         continue
                     if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or \
                         (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
-                        print("cont2")
                         continue
                     if self.do_merge is False:
                         segments_all.append(seg)
@@ -452,8 +449,6 @@ class FastLineDetector:
         x10R = x10R[x10R_inboard * y10R_inboard]
         y10R = y10R[x10R_inboard * y10R_inboard]
         right = src[y10R, x10R].mean()
-
-        print(right, left)
 
         if right > left:
             seg.swap_x()
