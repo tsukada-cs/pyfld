@@ -272,6 +272,6 @@ class TestFastLineDetector(unittest.TestCase):
         img = np.zeros([20,20])
         img[:5, 10] = 1
         img[15:, 10] = 1
-        fld = FastLineDetector(canny_aperture_size=0, do_merge=True)
+        fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
         seg_merged = fld.detect(img)
         self.assertEqual(seg_merged, [])
