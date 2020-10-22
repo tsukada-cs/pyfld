@@ -428,29 +428,32 @@ class FastLineDetector:
         """
         if seg.x1 == 0 and seg.x2 == 0 and seg.y1 == 0 and seg.y2 == 0:
             return seg
-        start = Point(seg.x1, seg.y1)
-        end = Point(seg.x2, seg.y2)
+        start = seg.p1
+        end = seg.p2
 
         dx = end.x - start.x
         dy = end.y - start.y
 
         x10 = np.linspace(seg.x1, seg.x2, num_points)
         y10 = np.linspace(seg.y1, seg.y2, num_points)
-        x10L = np.round(x10 - gap * np.cos(seg.angle + np.pi/2)).astype(int)
-        y10L = np.round(y10 - gap * np.sin(seg.angle + np.pi/2)).astype(int)
+
+        x10L = np.round(x10 + gap * np.cos(seg.angle + np.pi/2)).astype(int)
+        y10L = np.round(y10 + gap * np.sin(seg.angle + np.pi/2)).astype(int)
         x10L_inboard = np.logical_and(x10L >= 0, x10L < src.shape[1])
         y10L_inboard = np.logical_and(y10L >= 0, y10L < src.shape[0])
         x10L = x10L[x10L_inboard * y10L_inboard]
         y10L = y10L[x10L_inboard * y10L_inboard]
         left = src[y10L, x10L].mean()
 
-        x10R = np.round(x10 + gap * np.cos(seg.angle + np.pi/2)).astype(int)
-        y10R = np.round(y10 + gap * np.sin(seg.angle + np.pi/2)).astype(int)
+        x10R = np.round(x10 - gap * np.cos(seg.angle + np.pi/2)).astype(int)
+        y10R = np.round(y10 - gap * np.sin(seg.angle + np.pi/2)).astype(int)
         x10R_inboard = np.logical_and(x10R >= 0, x10R < src.shape[1])
         y10R_inboard = np.logical_and(y10R >= 0, y10R < src.shape[0])
         x10R = x10R[x10R_inboard * y10R_inboard]
         y10R = y10R[x10R_inboard * y10R_inboard]
         right = src[y10R, x10R].mean()
+
+        print(right, left)
 
         if right > left:
             seg.swap_x()
