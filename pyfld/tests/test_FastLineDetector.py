@@ -45,6 +45,12 @@ class TestFastLineDetector(unittest.TestCase):
         segments = fld.detect(img)
         self.assertEqual(len(segments), 1)
     
+    def test_FLD_with_high_threshold(self):
+        fld = FastLineDetector(length_threshold=40)
+        img = np.eye(30).astype(np.uint8)
+        segments = fld.detect(img)
+        self.assertEqual(len(segments), 0) # 2 because of Gibbs effect
+
     def test_get_point_chain(self):
         fld = FastLineDetector()
         img = np.eye(5) + np.fliplr(np.eye(5))
@@ -57,6 +63,12 @@ class TestFastLineDetector(unittest.TestCase):
         self.assertEqual(point_chain[4], [[1, 3], [2, 4]])
         self.assertEqual(point_chain[5], [[2, 3]])
         self.assertEqual(point_chain[6], [[0, 4]])
+
+    def test_get_point_chain_on_empty_image(self):
+        fld = FastLineDetector()
+        img = np.zeros([10,10])
+        point_chain = fld.get_point_chain(img)
+        self.assertEqual(len(point_chain), 0)
         
     def test_get_chained_points_1(self):
         fld = FastLineDetector()
@@ -161,6 +173,20 @@ class TestFastLineDetector(unittest.TestCase):
                   Point(2,4), Point(3,5), Point(4,5), Point(5,5)]
         segments = fld.extract_segments(points)
         self.assertEqual(segments, [])
+
+    def adjust_left_of_segment_to_be_higher(self):
+        fld = FastLineDetector()
+        img = np.zeros([5,5])
+        img[:,:2] = 0
+        img[:,2] = 1
+        img[:,3:] = 2
+        seg0 = Segment(0,0,0,0)
+        seg0_adjusted = fld.adjust_left_of_segment_to_be_higher(img, seg0)
+        self.assertEqual(seg0_adjusted, Segment(0,0,0,0))
+
+        seg = Segment(2,0,2,5)
+        seg_adjusted = fld.adjust_left_of_segment_to_be_higher(img, seg)
+        self.assertEqual(seg0_adjusted, Segment(2,5,2,0))
 
     def test_dist_point_line_1(self):
         p1 = Point(0,0)
