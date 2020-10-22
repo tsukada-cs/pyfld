@@ -49,7 +49,9 @@ class TestFastLineDetector(unittest.TestCase):
         fld = FastLineDetector(length_threshold=40)
         img = np.eye(30).astype(np.uint8)
         segments = fld.detect(img)
-        self.assertEqual(len(segments), 0) # 2 because of Gibbs effect
+        self.assertEqual(len(segments), 0)
+        fld = FastLineDetector(distance_threshold=40)
+        self.assertEqual(len(segments), 0)
 
     def test_get_point_chain(self):
         fld = FastLineDetector()
