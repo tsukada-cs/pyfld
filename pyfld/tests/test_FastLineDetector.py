@@ -174,7 +174,7 @@ class TestFastLineDetector(unittest.TestCase):
         segments = fld.extract_segments(points)
         self.assertEqual(segments, [])
 
-    def adjust_left_of_segment_to_be_higher(self):
+    def test_adjust_left_of_segment_to_be_higher(self):
         fld = FastLineDetector()
         img = np.zeros([5,5])
         img[:,:2] = 0
