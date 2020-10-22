@@ -1,8 +1,18 @@
 language: python
+
 python:
     - 3.6
     - 3.7
     - 3.8
-script:
+
+before_install:
+    - pip install coveralls pytest-cov
+
+install:
     - pip install .
-    - pytest pyfld/tests
+
+script:
+    - pytest --cov=pyfld pyfld/tests
+
+after_success:
+    - coveralls
