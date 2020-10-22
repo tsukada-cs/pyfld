@@ -12,7 +12,7 @@ This package is designed to allow fine tuning of parameters based on this approa
 
 ## Instration
 pyfld can be installed by cloning the GitHub repository:
-```
+```shell
 git clone https://github.com/tsukada-cs/pyfld
 cd pyfld
 pip install .
