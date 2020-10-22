@@ -5,8 +5,8 @@ import numpy as np
 
 from pyfld import FastLineDetector, Point, Segment
 
-class TestLineSegment(unittest.TestCase):
-    """Test the LineSegment class."""
+class TestFastLineDetector(unittest.TestCase):
+    """Test the FastLineDetector class."""
     def test_FLD_const_color(self, *mocks):
         fld = FastLineDetector()
         img = np.ones([30,30]).astype(np.uint8)
