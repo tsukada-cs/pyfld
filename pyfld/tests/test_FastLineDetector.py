@@ -58,19 +58,17 @@ class TestFastLineDetector(unittest.TestCase):
         self.assertEqual(len(segments), 0)
 
     def test_FLD_empty_segments(self):
-        fld = FastLineDetector(length_threshold=4, canny_aperture_size=0)
-        points = [Point(0,0), Point(0,1), Point(1,2), Point(2,2), Point(3,1)]
+        fld = FastLineDetector(length_threshold=3, canny_aperture_size=0)
         img = np.array([
-            [1,1,0,0],
-            [0,0,1,0],
-            [0,0,1,0],
-            [0,1,0,0]
+            [1,1,0],
+            [0,0,1],
+            [0,0,1],
         ])
         img = np.pad(img, 5)
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
-        fld = FastLineDetector(length_threshold=3, distance_threshold=0, canny_aperture_size=0)
-        segments = fld.extract_segments(points)
+        fld = FastLineDetector(length_threshold=2, distance_threshold=0, canny_aperture_size=0)
+        segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
 
     def test_get_point_chain(self):
@@ -269,9 +267,9 @@ class TestFastLineDetector(unittest.TestCase):
         self.assertEqual(seg_merged, None)
 
     def test_merge_segments_4(self):
-        img = np.zeros([20,20])
-        img[:5, 10] = 1
-        img[15:, 10] = 1
+        img = np.zeros([50,50])
+        img[:10, 24] = 1
+        img[40:, 24] = 1
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
-        seg_merged = fld.detect(img)
-        self.assertEqual(seg_merged, [])
+        segments = fld.detect(img)
+        self.assertEqual(len(segments), 2)
