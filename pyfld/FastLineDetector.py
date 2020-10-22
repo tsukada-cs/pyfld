@@ -187,8 +187,8 @@ class FastLineDetector:
             return point_chain
         # rs, cs = np.where(img != 0)
         # for r, c in zip(rs, cs):
-        for r in img.shape[0]:
-            for c in img.shape[1]:
+        for r in range(img.shape[0]):
+            for c in range(img.shape[1]):
                 # Skip for non-seeds
                 if img[r,c] == 0:
                     continue
