@@ -44,7 +44,20 @@ class TestFastLineDetector(unittest.TestCase):
         img[16:-5, 15] = 255
         segments = fld.detect(img)
         self.assertEqual(len(segments), 1)
-
+    
+    def test_get_point_chain(self):
+        fld = FastLineDetector()
+        img = np.eye(5) + np.fliplr(np.eye(5))
+        img[:,2] = 1
+        point_chain = fld.get_point_chain(img)
+        self.assertEqual(point_chain[0], [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4]])
+        self.assertEqual(point_chain[1], [[2, 0], [3, 1]])
+        self.assertEqual(point_chain[2], [[4, 0]])
+        self.assertEqual(point_chain[3], [[2, 1]])
+        self.assertEqual(point_chain[4], [[1, 3], [2, 4]])
+        self.assertEqual(point_chain[5], [[2, 3]])
+        self.assertEqual(point_chain[6], [[0, 4]])
+        
     def test_get_chained_points_1(self, *mocks):
         fld = FastLineDetector()
         img = np.zeros([5,5])
