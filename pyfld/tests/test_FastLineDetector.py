@@ -7,6 +7,16 @@ from pyfld import FastLineDetector, Point, Segment
 
 class TestFastLineDetector(unittest.TestCase):
     """Test the FastLineDetector class."""
+    def test__init__(self):
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(length_threshold=0)
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(distance_threshold=-1)
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(canny_th1=-1)
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(canny_th2=-1)
+
     def test_FLD_const_color(self, *mocks):
         fld = FastLineDetector()
         img = np.ones([30,30]).astype(np.uint8)
