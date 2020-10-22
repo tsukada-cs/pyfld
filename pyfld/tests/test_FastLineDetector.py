@@ -57,6 +57,22 @@ class TestFastLineDetector(unittest.TestCase):
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
 
+    def test_FLD_empty_segments(self):
+        fld = FastLineDetector(length_threshold=4, canny_aperture_size=0)
+        points = [Point(0,0), Point(0,1), Point(1,2), Point(2,2), Point(3,1)]
+        img = np.array([
+            [1,1,0,0],
+            [0,0,1,0],
+            [0,0,1,0],
+            [0,1,0,0]
+        ])
+        img = np.pad(img, 5)
+        segments = fld.detect(img)
+        self.assertEqual(len(segments), 0)
+        fld = FastLineDetector(length_threshold=3, distance_threshold=0, canny_aperture_size=0)
+        segments = fld.extract_segments(points)
+        self.assertEqual(len(segments), 0)
+
     def test_get_point_chain(self):
         fld = FastLineDetector()
         img = np.eye(5) + np.fliplr(np.eye(5))
@@ -179,18 +195,6 @@ class TestFastLineDetector(unittest.TestCase):
                   Point(2,4), Point(3,5), Point(4,5), Point(5,5)]
         segments = fld.extract_segments(points)
         self.assertEqual(segments, [])
-
-    def test_extract_segments_4(self):
-        fld = FastLineDetector(length_threshold=4)
-        points = [Point(0,0), Point(0,1), Point(1,2), Point(2,2), Point(3,1)]
-        segments = fld.extract_segments(points)
-        self.assertEqual(len(segments), 0)
-
-    def test_extract_segments_5(self):
-        fld = FastLineDetector(length_threshold=2, distance_threshold=0)
-        points = [Point(0,0), Point(0,1), Point(1,2)]
-        segments = fld.extract_segments(points)
-        self.assertEqual(len(segments), 0)
 
     def test_adjust_left_of_segment_to_be_higher(self):
         fld = FastLineDetector()
