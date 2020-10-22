@@ -22,7 +22,7 @@ class TestSegment(unittest.TestCase):
         seg.swap_x()
         self.assertEqual(seg, Segment(x2, y1, x1, y2))
 
-    def test_swap_x(self):
+    def test_swap_y(self):
         x1 = 0
         x2 = 1
         y1 = 2
