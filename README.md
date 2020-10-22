@@ -1,4 +1,5 @@
 # pyfld
+[![Build Status](https://travis-ci.com/tsukada-cs/pyfld.svg?branch=main)](https://travis-ci.com/tsukada-cs/pyfld)
 FastLineDetector implemented in Python.
 
 
