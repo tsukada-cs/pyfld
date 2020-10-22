@@ -33,10 +33,10 @@ class Segment(list):
         return np.arctan2(self.y2 - self.y1, self.x2 - self.x1)
     @property
     def p1(self):
-        return Point(x1, y1)
+        return Point(self.x1, self.y1)
     @property
     def p2(self):
-        return Point(x2, y2)
+        return Point(self.x2, self.y2)
     def swap_x(self):
         self[0], self[2] = self[2], self[0]
     def swap_y(self):
