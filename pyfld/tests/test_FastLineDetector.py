@@ -50,8 +50,6 @@ class TestFastLineDetector(unittest.TestCase):
         img = np.eye(30).astype(np.uint8)
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
-        fld = FastLineDetector(distance_threshold=40)
-        self.assertEqual(len(segments), 0)
 
     def test_FLD_on_the_corner(self):
         fld = FastLineDetector(length_threshold=40)
@@ -182,6 +180,18 @@ class TestFastLineDetector(unittest.TestCase):
         segments = fld.extract_segments(points)
         self.assertEqual(segments, [])
 
+    def test_extract_segments_4(self):
+        fld = FastLineDetector(length_threshold=4)
+        points = [Point(0,0), Point(0,1), Point(1,2), Point(2,2), Point(3,1)]
+        segments = fld.extract_segments(points)
+        self.assertEqual(len(segments), 0)
+
+    def test_extract_segments_5(self):
+        fld = FastLineDetector(length_threshold=2, distance_threshold=0)
+        points = [Point(0,0), Point(0,1), Point(1,2)]
+        segments = fld.extract_segments(points)
+        self.assertEqual(len(segments), 0)
+
     def test_adjust_left_of_segment_to_be_higher(self):
         fld = FastLineDetector()
         img = np.zeros([5,5])
@@ -253,3 +263,11 @@ class TestFastLineDetector(unittest.TestCase):
         fld = FastLineDetector()
         seg_merged = fld.merge_segments(seg1, seg2)
         self.assertEqual(seg_merged, None)
+
+    def test_merge_segments_4(self):
+        img = np.zeros([20,20])
+        img[:5, 10] = 1
+        img[15:, 10] = 1
+        fld = FastLineDetector(canny_aperture_size=0, do_merge=True)
+        seg_merged = fld.detect(img)
+        self.assertEqual(seg_merged, [])
