@@ -137,8 +137,7 @@ class FastLineDetector:
                     seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
                     if seg_length < self.length_threshold:
                         continue
-                    if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or \
-                        (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
+                    if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
                     if self.do_merge is False:
                         segments_all.append(seg)
