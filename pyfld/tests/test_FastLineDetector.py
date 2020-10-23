@@ -283,10 +283,3 @@ class TestFastLineDetector(unittest.TestCase):
         fld = FastLineDetector()
         seg_merged = fld.merge_segments(seg1, seg2)
         self.assertNotEqual(seg_merged, None)
-
-    def test_merge_lines_2(self):
-        seg1 = Segment(10,10,20,20)
-        seg2 = Segment(10,10,0,1)
-        fld = FastLineDetector(distance_threshold=100)
-        seg_merged = fld.merge_lines(seg1, seg2)
-        self.assertNotEqual(seg_merged, None)
