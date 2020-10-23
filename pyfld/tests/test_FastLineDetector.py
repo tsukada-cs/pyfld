@@ -53,7 +53,7 @@ class TestFastLineDetector(unittest.TestCase):
 
     def test_FLD_on_the_edge(self):
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0)
-        img = np.zeros([10,10])
+        img = np.zeros([30,30])
         img[:,0] = 1
         segments = fld.detect(img)
         self.assertEqual(len(segments), 0)
