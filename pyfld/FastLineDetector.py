@@ -32,6 +32,9 @@ class Segment(list):
     def angle(self):
         return np.arctan2(self.y2 - self.y1, self.x2 - self.x1)
     @property
+    def length(self):
+        return np.sqrt((self.x2-self.x1)**2 + (self.y2-self.y1)**2)
+    @property
     def p1(self):
         return Point(self.x1, self.y1)
     @property
@@ -134,8 +137,7 @@ class FastLineDetector:
                     continue
 
                 for seg in segments:
-                    seg_length = np.sqrt((seg.x1-seg.x2)**2 + (seg.y1-seg.y2)**2)
-                    if seg_length < self.length_threshold:
+                    if seg.length < self.length_threshold:
                         continue
                     if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
