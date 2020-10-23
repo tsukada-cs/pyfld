@@ -277,9 +277,16 @@ class TestFastLineDetector(unittest.TestCase):
         segments = fld.detect(img)
         self.assertEqual(len(segments), 2)
 
-    def test_merge_segments_5(self):
+    def test_merge_lines_1(self):
         seg1 = Segment(0,0,0,10)
         seg2 = Segment(0,11,0,20)
         fld = FastLineDetector()
         seg_merged = fld.merge_segments(seg1, seg2)
+        self.assertNotEqual(seg_merged, None)
+
+    def test_merge_lines_2(self):
+        seg1 = Segment(10,10,20,20)
+        seg2 = Segment(10,10,0,1)
+        fld = FastLineDetector(distance_threshold=100)
+        seg_merged = fld.merge_lines(seg1, seg2)
         self.assertNotEqual(seg_merged, None)
