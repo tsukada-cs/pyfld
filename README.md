@@ -26,13 +26,15 @@ pip install .
 Standard use case:
 ```python
 import numpy as np
+from PIL import Image
 
 from pyfld import FastLineDetector
 
-img = cv2.imread("sample.png") # gray scale image
+img = Image.open("sample.png")
+img = np.asarray(img.convert("L"))
 
 length_threshold = 10
-distance_threshold = 1.414
+distance_threshold = 1.41421356
 canny_th1 = 50
 canny_th2 = 50
 canny_aperture_size = 3
@@ -40,10 +42,11 @@ do_merge = False
 
 fld = FastLineDetector(length_threshold, distance_threshold, canny_th1, canny_th2, canny_aperture_size, do_merge)
 segments = fld.detect(img)
-x1, y1, x2, y2 = np.array(segments)
+x1, y1, x2, y2 = np.array(segments).T
 ```
 
-If the `img` is already binarized, set `canny_aperture_size=0`.
+If the `img` is already binarized, set `canny_aperture_size=0`. Then, the Canny method is not used, and edge detection is performed directly on the input image.
+
 
 Example of line segment visualization:
 ```python
