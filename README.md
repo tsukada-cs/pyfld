@@ -57,6 +57,7 @@ ax.imshow(img, cmap="gray")
 ax.plot([x1, x2], [y1, y2], c="r")
 plt.show()
 ```
+<img width="349" alt="FLD_output" src="https://user-images.githubusercontent.com/45615081/97020086-17924a00-158c-11eb-9162-94ff5eeb1a6a.png">
 
 ## Reference
 * J. Han Lee, S. Lee, G. Zhang, J. Lim, W. Kyun Chung, I. Hong Suh. "Outdoor place recognition in urban environments using straight lines." In 2014 IEEE International Conference on Robotics and Automation (ICRA), pp.5550–5557. IEEE, 2014. [[Link to PDF]](http://cvlab.hanyang.ac.kr/~jwlim/files/icra14linerec.pdf)
