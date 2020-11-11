@@ -13,9 +13,9 @@ script:
 after_success:
 - coveralls
 deploy:
-    provider: pypi
-    user: tsukada-cs
-    password:
-        secure: gESCeAV1jzphKckgGXn+D7DsPWFyOAmi7xnKIwDIM2PjHw8eV3QA+vu+tpSn8x60DdrwG3L+IaVFxudstmNZHrCtITluoEKbjFu1b7LBnTAoOjPmA+Wn+SdVSj0bW3xFD0SXLOcNa495Y4W4W+1aC7FL0riQlNLIvk2XnxsxtTT0QWxHIinHBOieDwb/z76M637KyFN1JPWJsYc9ANyc1YPGtgMnSMZ31N6B458WNffFqD6TXgOa3EG3iiLRUCHUa+jN/Ho/lAAw4hI0l+j+0jo37fCY+EoK5md5iMT20ses4n1Pc2Yu4QioTlrgxL7y0/PeXqQj4Omcq41V5sohucUPmhIwdSjWAI8tSYLOeV5PWZtWkVcSpB1QHmqdLlYw/M7YeQb0fGGOY9Bvnt2oOA4AYAU+9ePpi8hG++qVTenHsvLqDdvF77yoqCedCVEMvJ5dyEAtPq5qUHW16lqgFEem18qNruWawLvj38iyTKgL0fDUOKOC3Eh2Jshm/9uOHOo6f1eh/fQG8AUubrI0Hes2dbVfEBwQFU8dNs5WygwvELQW2zH5qJYH2jgOEIzWKLrlH7YCpDn/yHSKVRhLvawifz5V1CJNx/szXQWO4li9FXSP3d/9EmwBayWyT9ZZiRxe+SWOwkL9ochUqGOudrKE86X1bFdYxqCV3cjULCw=
-    on:
-      tags: true
+  provider: pypi
+  username: tsukada-cs
+  password:
+    secure: CTCGdAt2Bwm4eyW5F/JdXwvo+wevw2RQTLdWZhSPn0iMX/bXbfsoJ8FT4Gt7kcVYBbxkD7HJOpM3gWobeq4WvHBQnHpG8/RN+k3CL3yJ0ntllrKvEDtLJ0xtup2+inZ0AEO2zyg2SLQKL8gnwvqKKLGw6JE5XlKqahlA4Q/W4VatDPcWof85rBQIER1jOv8LysZ6QpfeVZJ5qw1fRnRRwRCEUy7tj/JItWcoR0RK4E0EMMAkfEfDenap97Hz5jBp6zpnGgFcT+Hs8gYVwzfl1SN7au8GedQExuA52ZppM1pcvJF9T3W9HIIb7BcNmStYZqiu/FjLQMfnLRxtmks4KGe+bEt8WdOtlW7jVowDsT7TqrqzAfrt2hccx+zb0RGsSgEASon9MZrRXZlwq2h9uinOA/Zt/Z6cLQ94IJ7ayfus8aVRFXX++Y4RLOJBGpNVXYCbr5eBbTaFb9ErEQaV5BxQ4w/MBQThT63lp/8lzEyRK78i8K4ocfAVaiZmVY5Ze6+NCtw8b2xDXIHOtA/ZStU8+/RE71PHJuHCJR4jXw0WWJZgr/vq0+wM52blaTf04bidBioYEnibe0QfdSlgIm4SzOOS4L/nLn/CLAyrPK/9OrJshsxLSH/EGYXevqlG/NgqpZIW2TXH3/15/TACbxU79BgNC5UNx3NAydrIN6g=
+  on:
+    tags: true
