@@ -1,19 +1,23 @@
 language: python
-
 python:
-    - 3.6
-    - 3.7
-    - 3.8
-
+- 3.6
+- 3.7
+- 3.8
 before_install:
-    - pip install coveralls pytest-cov
-
+- pip install coveralls pytest-cov
 install:
-    - pip install -e .
-
+- pip install -e .
 script:
-    - pytest --cov=pyfld pyfld/tests
-    - coverage run -a --source=pyfld -m pytest pyfld/tests
-
+- pytest --cov=pyfld pyfld/tests
+- coverage run -a --source=pyfld -m pytest pyfld/tests
 after_success:
-    - coveralls
+- coveralls
+deploy:
+  matrix:
+  - provider: pypi
+    user: tsukada-cs
+    password:
+        secure: gESCeAV1jzphKckgGXn+D7DsPWFyOAmi7xnKIwDIM2PjHw8eV3QA+vu+tpSn8x60DdrwG3L+IaVFxudstmNZHrCtITluoEKbjFu1b7LBnTAoOjPmA+Wn+SdVSj0bW3xFD0SXLOcNa495Y4W4W+1aC7FL0riQlNLIvk2XnxsxtTT0QWxHIinHBOieDwb/z76M637KyFN1JPWJsYc9ANyc1YPGtgMnSMZ31N6B458WNffFqD6TXgOa3EG3iiLRUCHUa+jN/Ho/lAAw4hI0l+j+0jo37fCY+EoK5md5iMT20ses4n1Pc2Yu4QioTlrgxL7y0/PeXqQj4Omcq41V5sohucUPmhIwdSjWAI8tSYLOeV5PWZtWkVcSpB1QHmqdLlYw/M7YeQb0fGGOY9Bvnt2oOA4AYAU+9ePpi8hG++qVTenHsvLqDdvF77yoqCedCVEMvJ5dyEAtPq5qUHW16lqgFEem18qNruWawLvj38iyTKgL0fDUOKOC3Eh2Jshm/9uOHOo6f1eh/fQG8AUubrI0Hes2dbVfEBwQFU8dNs5WygwvELQW2zH5qJYH2jgOEIzWKLrlH7YCpDn/yHSKVRhLvawifz5V1CJNx/szXQWO4li9FXSP3d/9EmwBayWyT9ZZiRxe+SWOwkL9ochUqGOudrKE86X1bFdYxqCV3cjULCw=
+    skip_existing: true
+    on:
+      tags: true
