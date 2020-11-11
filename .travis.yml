@@ -4,6 +4,7 @@ python:
 - 3.7
 - 3.8
 before_install:
+- git checkout main
 - pip install coveralls pytest-cov
 install:
 - pip install -e .
