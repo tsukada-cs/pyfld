@@ -1,7 +1,8 @@
 language: python
 os:
-  - linux
-  - osx
+- linux
+dist:
+- Ubuntu
 python:
 - 3.6
 - 3.7
@@ -22,5 +23,4 @@ deploy:
   password:
     secure: EfwJZGvKH0s5gVJCezYRcTVJE+XIrIe6ZuD9zJ6aG5kAcCN9QHxRA20ZbMUODB6A2youIUn7mJvsGjgMp+6gp7QaCGEBR1Uuxfe+eOJZmK6dipe0WA6nC2/7/lJYCrfQl3C+6eh6qVhLgfcHPIkoM+JJWcx7URbX/WZ1vFs2W9F3HbjhPPDITrny9eOyiPcJOo8gFY2PDxqCgN3y3tROVh6V6vgWXTByuoDHkk6ylrl+eGCqX6qqz6nYwFUn53ucsZ4yE1Bccv5E9Yg4cGTCmerOPuslQKYbTcT/pDGKwyWEAm7tl7I3jPbOUU0w/yvxaCsnmEY1J9U0h5yOz4RQwiQpP9IXxYfXVzf8FZBsk0zrVvmvCsGVWF2k3AtvDVjYg9bYGPs4J9BLhR+Igh0W5i0akdXNPp+z7Xb2xmtc+1HrTjGqJ50MD5u1UZ1HKuxh7JRRKNa3rVqYxGsD5Etc86HspcXmX0RUC4QIsxOiInLIX61VnOWgm/WhUtjkRZWcl/aDJe6ggB0Cs3oRc0fPvyNzrYP3aoh0Cwr01pG3E9gWlUfZAnW5GijBB57Ljy+dXpivloRn9uGB740gCgDzaxBXDKD+FFAzZt+EKcPOARcs44nJpCnb+jAvIld5bGBkitUMjIBpmSvIZumLfxgzTgEUr0hWh1bElQWIl9qoGaI=
   on:
-    tags: true
     branch: main
