@@ -29,6 +29,7 @@ setup(
     maintainer_email='tsukada.cs@gmail.com',
     description='pyfld',
     long_description=readme,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     install_requires=_requires_from_file('requirements.txt'),
     license="GPLv3+",
