@@ -2,10 +2,10 @@
 # -*- coding:utf-8 -*-
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from numpy.distutils.core import setup, Extension
+# from numpy.distutils.core import setup, Extension
 import os
 
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 try:
     with open('README.md') as f:
@@ -29,9 +29,7 @@ setup(
     maintainer_email='tsukada.cs@gmail.com',
     description='pyfld',
     long_description=readme,
-    long_description_content_type='text/markdown',
     packages=find_packages(),
-    ext_modules=extensions,
     install_requires=_requires_from_file('requirements.txt'),
     license="GPLv3+",
     python_requires='>=3.6',
@@ -42,7 +40,6 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
-        'License :: OSI Approved :: MIT License',
     ],
     entry_points="""
       # -*- Entry points: -*-

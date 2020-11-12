@@ -20,6 +20,8 @@ deploy:
   username: tsukada-cs
   password:
     secure: h0GbJ9jwuJTW2c7v+KvyL2pMVdJ+C6J/jq+5gJkOEHoMd8I9R5DfHqaE2ADv3LXyTLhgCO9avqTf6CmVSFczuTIRZPyZX/bC6psgXxEFZ90eOI6a2JdxE1G4ce+ioYAJj0TIjIdRmCN6IbDvspyYI1yISOUBBel7muePiKiDTrXgVP/Wp8ZdTfMfS5goUQELftGlUntEKsFRg8ouJp3CmpdOR3uZB9YNE5azCTxnlD7nNa4l/OtYZlEUUhPhvKGE+ot6hljL0je9QmzqiOkCbpxrJfMN5cNnIlICO7ThNTpcvzRKSWty+exFITMAoxmpyinQ9S6HWX/kT/yUGXvHgSxMpHk6Vnjdr+TO5eW4CjzNQDyXJUvS1PKUMb5EQ3K15ud398AbnJXwU0HVvmJCdd2rLB2IcQGtFd0YB2mPDq4oYcfMmMHxTFJrqhV4fpONkuTYfDACs21CyKg8iOIQTaB5INARiRnWKp2y1J2Lh4y3W2GzHv/esTyxVLUVWbycMf1m9KUYWmNn/Y/hcatVNjpFRNaZi+9cPdmdigkBH7mdPIJX737deUbIzjc98OSRdSlXLONWrCKASfXB6gq5T/Iqd1j/4s+ZglaBlPXWNkpf/hWaYWFvUjpC5VWI1ei5s9MMH4pgf1ZAB1d0gTMXcO339TLFSNiPpu6HPsqjLIo=
+  distributions: sdist
+  skip_existing: true
   on:
     repo: tsukada-cs/pyfld
     branch: main
