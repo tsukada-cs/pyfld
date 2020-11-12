@@ -8,10 +8,10 @@ import os
 from setuptools import find_packages, setup
 
 try:
-    with open('README.md') as f:
+    with open("README.md", "r", encoding="utf-8") as f:
         readme = f.read()
 except IOError:
-    readme = ''
+    readme = ""
 
 
 def _requires_from_file(filename):
@@ -22,26 +22,32 @@ extensions = []
 setup(
     name="pyfld",
     version="0.2.5",
-    url='https://github.com/tsukada-cs/pyfld',
-    author='Taiga Tsukada',
-    author_email='tsukada.cs@gmail.com',
-    maintainer='Taiga Tsukada',
-    maintainer_email='tsukada.cs@gmail.com',
-    description='pyfld',
+    url="https://github.com/tsukada-cs/pyfld",
+    author="Taiga Tsukada",
+    author_email="tsukada.cs@gmail.com",
+    maintainer="Taiga Tsukada",
+    maintainer_email="tsukada.cs@gmail.com",
+    description="pyfld",
     long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     packages=find_packages(),
     include_package_data=True,
-    install_requires=_requires_from_file('requirements.txt'),
+    install_requires=_requires_from_file("requirements.txt"),
     license="GPLv3+",
-    python_requires='>=3.6',
+    python_requires=">=3.6",
     classifiers=[
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
+        "Development Status :: 5 - Production/Stable",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
+        "License :: OSI Approved :: GNU General Public License v3 " +
+        "or later (GPLv3+)",
+        "Topic :: Scientific/Engineering"
     ],
     entry_points="""
       # -*- Entry points: -*-
