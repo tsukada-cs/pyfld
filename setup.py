@@ -31,6 +31,7 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=_requires_from_file('requirements.txt'),
     license="GPLv3+",
     python_requires='>=3.6',
