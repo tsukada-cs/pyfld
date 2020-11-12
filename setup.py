@@ -21,7 +21,7 @@ extensions = []
 
 setup(
     name="pyfld",
-    version="0.2.8",
+    version="0.2.10",
     url="https://github.com/tsukada-cs/pyfld",
     author="Taiga Tsukada",
     author_email="tsukada.cs@gmail.com",
