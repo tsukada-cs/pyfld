@@ -12,7 +12,7 @@ This package is designed to allow fine tuning of parameters based on this approa
 ## Instration
 The currently recommended method of installation is via pip:
 ```shell
-pip install tropycal
+pip install pyfld
 ```
 
 pyfld can also be installed by cloning the GitHub repository:
