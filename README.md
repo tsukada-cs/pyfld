@@ -10,7 +10,12 @@ In order to extract line segments, Lee et al., (2014) devised a simple but relia
 This package is designed to allow fine tuning of parameters based on this approach.
 
 ## Instration
-pyfld can be installed by cloning the GitHub repository:
+The currently recommended method of installation is via pip:
+```shell
+pip install tropycal
+```
+
+pyfld can also be installed by cloning the GitHub repository:
 ```shell
 git clone https://github.com/tsukada-cs/pyfld
 cd pyfld
@@ -18,7 +23,7 @@ pip install .
 ```
 
 ## Dependencies
-* numpy >= 1.13
+* numpy >= 1.17.3
 * opencv >= 2.4
 
 ## Sample Usage
