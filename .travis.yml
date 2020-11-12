@@ -18,8 +18,7 @@ after_success:
 deploy:
   provider: pypi
   username: __token__
-  password:
-    secure: pypi-AgEIcHlwaS5vcmcCJGE4MTQ0ZDk5LWYwYTgtNDA2Ny05NzAyLWM2OWI3YWYyN2M5NgACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgCfmgtb4NQIMeZO93yioz9PXWKGsS7M5egv9hku_hzB0
+  password: pypi-AgEIcHlwaS5vcmcCJGE4MTQ0ZDk5LWYwYTgtNDA2Ny05NzAyLWM2OWI3YWYyN2M5NgACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgCfmgtb4NQIMeZO93yioz9PXWKGsS7M5egv9hku_hzB0
   distributions: sdist
   skip_existing: true
   skip_cleanup: true
