@@ -15,13 +15,13 @@ except IOError:
 
 
 def _requires_from_file(filename):
-    return open(filename).read().splitlines()
+    return open(filename).read("r", encoding="utf-8").splitlines()
 
 extensions = []
 
 setup(
     name="pyfld",
-    version="0.2.6",
+    version="0.2.7",
     url="https://github.com/tsukada-cs/pyfld",
     author="Taiga Tsukada",
     author_email="tsukada.cs@gmail.com",
