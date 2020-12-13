@@ -5,6 +5,7 @@ python:
 - 3.6
 - 3.7
 - 3.8
+- 3.9
 before_install:
 - git checkout main
 - pip install coveralls pytest-cov
@@ -25,6 +26,6 @@ deploy:
   on:
     repo: tsukada-cs/pyfld
     branch: main
-    python: 3.8
+    python: 3.9
 dd:
   secure: A5UgqVsF3MX8VQdIufndSLZiAZBO2ZGFPgMArV/veob9pylqET2TEBPmewSSjVnYNFzxQtgIXz0ZkQlkqtpNeT5yh6pErNQsztVXU18oda9LftUlijIPuolOR2RDv6KZHKdqcxXfTzGgn+oFSKW9juzcJJ14nCkWoFU8mwTWrlldz87cnr5VPbGkioXXV7FfeG/XnKEPOD0LRPB4/ZbB96ztKFFSFWwmL5z6gOp6HFKVgQhn2tMG6axJH+vQgvD5JLgPnYL49GhpzXNdpX7jCQAmMKwfFVy9voBpqyoJGy2BeoUd/7+C7JMRESKjsPB9D8UFFiIboKsrwQfn8hqhqGCSJfyKpLoDdpbg4dE02malBEbUm3uOHaR235jfZHqpQI77kseFXXz2KVJhLDamj2CPd3VAB6W8CUaUxMPfwISuVhGcxNXSLrZNJ4LNOzdPhla8JNYqW2KfmXgO5cBACzhXGb0UmfRkVr+ReJ+WootxbcuztqSJML8eA3h/rpR9TvU3DpFZn2caea/TFSybP+bRCS+mPpdCXG7qfHjEFd1IP3v2BGlpuxhrG4wway8ciX5lSb5GUlu1d3V1P5C33Etc4PLeZ/v3CsZWDfasTLxjoQjwAnqfIPQFZkkK4IyEuy5fclg3F5YXe0KRKpPMD1vzPBdrkUNIUtQ9dWMdx78=
