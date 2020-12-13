@@ -27,6 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pytest coveralls pytest-cov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi- name: Test with pytest
+    - name: pytest and coverage check
       run: |
         pytest --cov=pyfld pyfld/tests
         coverage run -a --source=pyfld -m pytest pyfld/tests
