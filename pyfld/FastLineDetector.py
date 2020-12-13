@@ -103,7 +103,7 @@ class FastLineDetector:
         segments = self.line_detection(image)
         if segments == []:
             raise LineNotFound("The image has no line segments")
-        return segments
+        return np.array(segments).T
 
     def line_detection(self, src):
         self._h, self._w = src.shape

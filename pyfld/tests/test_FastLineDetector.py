@@ -30,14 +30,14 @@ class TestFastLineDetector(unittest.TestCase):
         img[5:-5, 20] = 255
         fld = FastLineDetector()
         segments = fld.detect(img)
-        self.assertEqual(len(segments), 2) # 2 because of Gibbs effect
+        self.assertEqual(len(segments[0]), 2) # 2 because of Gibbs effect
 
     def test_FLD_edge_line(self):
         img = np.zeros([30,30]).astype(np.uint8)
         img[5:-5, 20] = 255
         fld = FastLineDetector(canny_aperture_size=0)
         segments = fld.detect(img)
-        self.assertEqual(len(segments), 1)
+        self.assertEqual(len(segments[0]), 1)
     
     def test_FLD_merge_lines(self):
         img = np.zeros([30,30]).astype(np.uint8)
@@ -45,7 +45,7 @@ class TestFastLineDetector(unittest.TestCase):
         img[16:-5, 15] = 255
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
         segments = fld.detect(img)
-        self.assertEqual(len(segments), 1)
+        self.assertEqual(len(segments[0]), 1)
     
     def test_FLD_with_high_threshold(self):
         img = np.eye(30).astype(np.uint8)
@@ -282,7 +282,7 @@ class TestFastLineDetector(unittest.TestCase):
         img[40:, 24] = 1
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
         segments = fld.detect(img)
-        self.assertEqual(len(segments), 2)
+        self.assertEqual(len(segments[0]), 2)
 
     def test_merge_lines_1(self):
         seg1 = Segment(0,0,0,10)
