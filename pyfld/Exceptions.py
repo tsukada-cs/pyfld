@@ -1,0 +1,2 @@
+class LineNotFound(Exception):
+    pass

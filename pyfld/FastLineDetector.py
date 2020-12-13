@@ -3,6 +3,8 @@ import copy
 import cv2
 import numpy as np
 
+from pyfld.Exceptions import LineNotFound
+
 class Point(list):
     def __init__(self, x, y):
         super().__init__([x,y])
@@ -99,6 +101,8 @@ class FastLineDetector:
         """
         image = np.array(image)
         segments = self.line_detection(image)
+        if segments == []:
+            raise LineNotFound("The image has no line segments")
         return segments
 
     def line_detection(self, src):
