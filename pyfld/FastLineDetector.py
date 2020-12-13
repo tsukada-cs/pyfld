@@ -5,6 +5,7 @@ import numpy as np
 
 from pyfld.Exceptions import LineNotFound, PointChainNotFound
 
+
 class Point(list):
     def __init__(self, x, y):
         super().__init__([x,y])
