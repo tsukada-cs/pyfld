@@ -4,7 +4,7 @@ from unittest import mock
 import numpy as np
 
 from pyfld import FastLineDetector, Point, Segment
-from pyfld.Exceptions import LineNotFound
+from pyfld.Exceptions import LineNotFound, PointChainNotFound
 
 
 class TestFastLineDetector(unittest.TestCase):
@@ -96,8 +96,9 @@ class TestFastLineDetector(unittest.TestCase):
     def test_get_point_chain_on_empty_image(self):
         img = np.zeros([10,10])
         fld = FastLineDetector()
-        point_chain = fld.get_point_chain(img)
-        self.assertEqual(len(point_chain), 0)
+        with self.assertRaises(PointChainNotFound):
+            point_chain = fld.get_point_chain(img)
+
         
     def test_get_chained_points_1(self):
         img = np.zeros([5,5])

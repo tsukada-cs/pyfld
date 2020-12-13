@@ -3,7 +3,7 @@ import copy
 import cv2
 import numpy as np
 
-from pyfld.Exceptions import LineNotFound
+from pyfld.Exceptions import LineNotFound, PointChainNotFound
 
 class Point(list):
     def __init__(self, x, y):
@@ -186,7 +186,8 @@ class FastLineDetector:
         """
         point_chain = []
         if np.all(img == 0):
-            return point_chain
+            raise PointChainNotFound("The image has no point chain")
+
         # rs, cs = np.where(img != 0)
         # for r, c in zip(rs, cs):
         for r in range(img.shape[0]):
