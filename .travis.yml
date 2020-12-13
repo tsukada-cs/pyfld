@@ -1,21 +1,21 @@
-language: python
-os:
-- linux
-dist: focal
-python:
-- 3.6
-- 3.7
-- 3.8
-- 3.9
-before_install:
-- git checkout main
-- pip install coveralls pytest-cov
-install:
-- pip install -e .
-script:
-- pytest --cov=pyfld pyfld/tests
-- coverage run -a --source=pyfld -m pytest pyfld/tests
-after_success:
+# language: python
+# os:
+# - linux
+# dist: focal
+# python:
+# - 3.6
+# - 3.7
+# - 3.8
+# - 3.9
+# before_install:
+# - git checkout main
+# - pip install coveralls pytest-cov
+# install:
+# - pip install -e .
+# script:
+# - pytest --cov=pyfld pyfld/tests
+# - coverage run -a --source=pyfld -m pytest pyfld/tests
+# after_success:
 - coveralls
 # deploy:
 #   provider: pypi
