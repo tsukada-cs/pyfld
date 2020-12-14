@@ -50,7 +50,7 @@ segments = fld.detect(img)
 x1, y1, x2, y2 = np.array(segments).T
 ```
 
-If the `img` is already binarized, set `canny_aperture_size=0`. Then, the Canny method is not used, and edge detection is performed directly on the input image.
+If the `img` is already binarized, set `canny_aperture_size=0`. Then, the Canny method is not used, and line segment detection is performed directly on the input image.
 
 
 Example of line segment visualization:
