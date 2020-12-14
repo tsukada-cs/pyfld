@@ -1,7 +1,7 @@
 # pyfld
 [![Build Status](https://github.com/tsukada-cs/pyfld/workflows/CI/badge.svg)](https://github.com/tsukada-cs/pyfld/actions?query=workflow%3ACI)
-[![PyPI version](https://img.shields.io/pypi/v/pyfld.svg)](https://pypi.python.org/pypi/pyfld/)
 [![Coverage Status](https://coveralls.io/repos/github/tsukada-cs/pyfld/badge.svg)](https://coveralls.io/github/tsukada-cs/pyfld?branch=main)
+[![PyPI version](https://img.shields.io/pypi/v/pyfld.svg)](https://pypi.python.org/pypi/pyfld/)
 
 Python package for detecting line segments from images.
 
