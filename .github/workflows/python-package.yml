@@ -14,8 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["ubuntu-latest", "macos-latest"]
-        python-version: ['3.7', '3.8']
+        os: ["windows-latest", "ubuntu-latest", "macos-latest"]
+        python-version: ['3.6', '3.7', '3.8', '3.9']
 
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
     - name: Check coverage with coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.os }}
+        COVERALLS_FLAG_NAME: ${{ matrix.os }} ${{ matrix.python-version }}
         COVERALLS_PARALLEL: true
       run: |
         coverage run -a --source=pyfld -m pytest pyfld/tests
