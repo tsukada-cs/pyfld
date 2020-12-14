@@ -35,6 +35,8 @@ jobs:
       run: |
         pytest --cov=pyfld pyfld/tests
     - name: Check coverage with coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         coverage run -a --source=pyfld -m pytest pyfld/tests
         coveralls
