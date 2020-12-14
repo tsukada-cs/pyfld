@@ -10,7 +10,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,11 +31,10 @@ jobs:
     - name: Install pyfld
       run: |
         pip install -e .
-    - name: Test with pytest and Check coverage with coveralls
+    - name: Test with pytest
       run: |
         pytest --cov=pyfld pyfld/tests
+    - name: Check coverage with coveralls
+      run: |
         coverage run -a --source=pyfld -m pytest pyfld/tests
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        coveralls
