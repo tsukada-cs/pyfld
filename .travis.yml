@@ -16,7 +16,7 @@
 # - pytest --cov=pyfld pyfld/tests
 # - coverage run -a --source=pyfld -m pytest pyfld/tests
 # after_success:
-- coveralls
+# - coveralls
 # deploy:
 #   provider: pypi
 #   username: __token__
