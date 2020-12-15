@@ -25,7 +25,7 @@ pip install .
 
 ## Dependencies
 * numpy >= 1.17.3
-* opencv >= 2.4
+* opencv-coontrib-python >= 2.4
 
 ## Sample Usage
 Standard use case:
@@ -46,8 +46,7 @@ canny_aperture_size = 3
 do_merge = False
 
 fld = FastLineDetector(length_threshold, distance_threshold, canny_th1, canny_th2, canny_aperture_size, do_merge)
-segments = fld.detect(img)
-x1, y1, x2, y2 = np.array(segments).T
+x1, y1, x2, y2 = fld.detect(img)
 ```
 
 If the `img` is already binarized, set `canny_aperture_size=0`. Then, the Canny method is not used, and line segment detection is performed directly on the input image.
