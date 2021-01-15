@@ -318,6 +318,7 @@ class FastLineDetector:
         if total == 0:
             return segments
         skip = 0
+        print(total-self.length_threshold)
         for i in range(total-self.length_threshold):
             if skip > 0:
                 skip -= 1
