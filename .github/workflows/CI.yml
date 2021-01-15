@@ -40,7 +40,7 @@ jobs:
         COVERALLS_FLAG_NAME: ${{ matrix.os }} ${{ matrix.python-version }}
         COVERALLS_PARALLEL: true
       run: |
-        coverage run -a --source=pyfld -m pytest pyfld/tests
+        coverage run -a --source=pyfld -m pytest pyfld/tests --service=github
         coveralls
 
   coveralls:
