@@ -315,8 +315,6 @@ class FastLineDetector:
         """
         segments = []
         total = len(points)
-        if total == 0:
-            return segments
         skip = 0
         for i in range(total-self.length_threshold):
             if skip > 0:
