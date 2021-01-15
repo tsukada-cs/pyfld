@@ -318,7 +318,6 @@ class FastLineDetector:
         if total == 0:
             return segments
         skip = 0
-        print(total-self.length_threshold)
         for i in range(total-self.length_threshold):
             if skip > 0:
                 skip -= 1
@@ -329,6 +328,7 @@ class FastLineDetector:
 
             is_line = True
             l_points = [ps]
+
             for j in range(1, self.length_threshold):
                 pt = Point(points[i+j].x, points[i+j].y)
                 dist = self.dist_point_line(ps, pe, pt)
@@ -368,6 +368,8 @@ class FastLineDetector:
             e1 = self.get_incident_point(a, b, ps, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
             e2 = self.get_incident_point(a, b, pe, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
             segments.append(Segment(e1.x, e1.y, e2.x, e2.y))
+            if self.length_threshold == 1:
+                j = 1
             skip = j
         return segments
 
