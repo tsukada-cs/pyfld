@@ -127,12 +127,9 @@ class FastLineDetector:
         segments_tmp = []
         for r in range(self._h):
             for c in range(self._w):
-                # Skip for non-seeds
                 if canny[r,c] == 0:
                     continue
-                # Found seeds
                 pt = Point(c,r)
-                # Get point chain
                 points, canny = self.get_chained_points(canny, pt)
 
                 if len(points) - 1 < self.length_threshold:
