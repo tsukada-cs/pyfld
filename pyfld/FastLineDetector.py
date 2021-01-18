@@ -146,7 +146,7 @@ class FastLineDetector:
                     if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
                     segments_all.append(seg)
-                    points_all.append(points)
+                    points_all.append(np.array(points))
                 points = []
                 segments = []
         
