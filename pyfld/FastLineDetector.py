@@ -99,12 +99,14 @@ class FastLineDetector:
             A vector of specifying the beginning and ending point of a line.
             Where vector is (x1, y1, x2, y2), point 1 is the start, point 2 is the end.
             Returned lines are directed so that the brighter side is placed on left.
+        points : numpy ndarray
+            Pixels used in line detection.            
         """
         image = np.array(image)
-        segments = self.line_detection(image)
+        segments, points = self.line_detection(image)
         if segments == []:
             raise LineNotFound("The image has no line segments")
-        return np.array(segments).T
+        return np.array(segments).T, np.array(points)
 
     def line_detection(self, src):
         self._h, self._w = src.shape
@@ -116,10 +118,12 @@ class FastLineDetector:
         canny[:5, :5] = 0
         canny[self._h-5:, self._w-5:] = 0
 
+        points_all = []
         segments_all = []
         if np.all(canny == 0):
-            return segments_all
+            return segments_all, points_all
 
+        points_tmp = []
         segments_tmp = []
         for r in range(self._h):
             for c in range(self._w):
@@ -134,7 +138,7 @@ class FastLineDetector:
                 if len(points) - 1 < self.length_threshold:
                     points = []
                     continue
-
+                
                 segments = self.extract_segments(points, xmin=0, xmax=self._w-1, ymin=0, ymax=self._h-1)
 
                 if len(segments) == 0:
@@ -148,12 +152,14 @@ class FastLineDetector:
                         continue
                     if self.do_merge is False:
                         segments_all.append(seg)
+                        points_all.append(points)
                     segments_tmp.append(seg)
+                    points_tmp.append(points)
                 points = []
                 segments = []
         
         if self.do_merge is False:
-            return segments_all
+            return segments_all, points_all
         ith = len(segments_tmp) - 1
         jth = ith - 1
         while (ith >= 1 or jth >= 0):
@@ -171,7 +177,8 @@ class FastLineDetector:
                 ith -= 1
                 jth = ith - 1
         segments_all = segments_tmp
-        return segments_all
+        points_all = points_tmp
+        return segments_all, points_all
 
     def get_point_chain(self, img):
         """

@@ -23,20 +23,20 @@ class TestFastLineDetector(unittest.TestCase):
         img = np.ones([30,30]).astype(np.uint8)
         fld = FastLineDetector()
         with self.assertRaises(LineNotFound):
-            segments = fld.detect(img)
+            segments, _ = fld.detect(img)
     
     def test_FLD_line(self):
         img = np.zeros([30,30]).astype(np.uint8)
         img[5:-5, 20] = 255
         fld = FastLineDetector()
-        segments = fld.detect(img)
+        segments, _ = fld.detect(img)
         self.assertEqual(len(segments[0]), 2) # 2 because of Gibbs effect
 
     def test_FLD_edge_line(self):
         img = np.zeros([30,30]).astype(np.uint8)
         img[5:-5, 20] = 255
         fld = FastLineDetector(canny_aperture_size=0)
-        segments = fld.detect(img)
+        segments, _ = fld.detect(img)
         self.assertEqual(len(segments[0]), 1)
     
     def test_FLD_merge_lines(self):
@@ -44,14 +44,14 @@ class TestFastLineDetector(unittest.TestCase):
         img[5:13, 15] = 255
         img[16:-5, 15] = 255
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
-        segments = fld.detect(img)
+        segments, _ = fld.detect(img)
         self.assertEqual(len(segments[0]), 1)
     
     def test_FLD_with_high_threshold(self):
         img = np.eye(30).astype(np.uint8)
         fld = FastLineDetector(length_threshold=40, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
-            segments = fld.detect(img)
+            segments, _ = fld.detect(img)
 
     def test_FLD_on_the_edge(self):
         img = np.zeros([30,30])
@@ -61,7 +61,7 @@ class TestFastLineDetector(unittest.TestCase):
         img[:,-1] = 1
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
-            segments = fld.detect(img)
+            segments, _ = fld.detect(img)
 
     def test_FLD_empty_segments(self):
         img = np.array([
@@ -75,10 +75,10 @@ class TestFastLineDetector(unittest.TestCase):
 
         fld = FastLineDetector(length_threshold=6, distance_threshold=5, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
-            segments = fld.detect(img)
+            segments, _ = fld.detect(img)
         fld = FastLineDetector(length_threshold=4, distance_threshold=0, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
-            segments = fld.detect(img)
+            segments, _ = fld.detect(img)
 
     def test_get_point_chain(self):
         img = np.eye(5) + np.fliplr(np.eye(5))
@@ -281,7 +281,7 @@ class TestFastLineDetector(unittest.TestCase):
         img[:10, 24] = 1
         img[40:, 24] = 1
         fld = FastLineDetector(length_threshold=2, canny_aperture_size=0, do_merge=True)
-        segments = fld.detect(img)
+        segments, _ = fld.detect(img)
         self.assertEqual(len(segments[0]), 2)
 
     def test_merge_lines_1(self):
