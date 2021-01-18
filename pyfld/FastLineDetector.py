@@ -123,8 +123,6 @@ class FastLineDetector:
         if np.all(canny == 0):
             return segments_all, points_all
 
-        points_tmp = []
-        segments_tmp = []
         for r in range(self._h):
             for c in range(self._w):
                 if canny[r,c] == 0:
@@ -147,34 +145,30 @@ class FastLineDetector:
                         continue
                     if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
-                    if self.do_merge is False:
-                        segments_all.append(seg)
-                        points_all.append(points)
-                    segments_tmp.append(seg)
-                    points_tmp.append(points)
+                    segments_all.append(seg)
+                    points_all.append(points)
                 points = []
                 segments = []
         
         if self.do_merge is False:
             return segments_all, points_all
-        ith = len(segments_tmp) - 1
+        
+        ith = len(segments_all) - 1
         jth = ith - 1
         while (ith >= 1 or jth >= 0):
-            seg1 = segments_tmp[ith]
-            seg2 = segments_tmp[jth]
+            seg1 = segments_all[ith]
+            seg2 = segments_all[jth]
             seg_merged = self.merge_segments(seg1, seg2)
             if seg_merged is None:
                 jth -= 1
             else:
-                segments_tmp[jth] = seg_merged
-                del segments_tmp[ith]
+                segments_all[jth] = seg_merged
+                del segments_all[ith]
                 ith -= 1
                 jth = ith - 1
             if jth < 0:
                 ith -= 1
                 jth = ith - 1
-        segments_all = segments_tmp
-        points_all = points_tmp
         return segments_all, points_all
 
     def get_point_chain(self, img):
