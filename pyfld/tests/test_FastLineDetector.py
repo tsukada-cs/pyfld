@@ -53,7 +53,7 @@ class TestFastLineDetector(unittest.TestCase):
     
     def test_FLD_with_high_threshold(self):
         img = np.eye(30).astype(np.uint8)
-        fld = FastLineDetector(length_threshold=40, canny_aperture_size=0)
+        fld = FastLineDetector(length_threshold=40, xlen_threshold=40, ylen_threshold=40, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
             segments, _ = fld.detect(img)
 
