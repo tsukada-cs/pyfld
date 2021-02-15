@@ -32,3 +32,19 @@ class TestSegment(unittest.TestCase):
         seg = Segment(x1, y1, x2, y2)
         seg.swap_y()
         self.assertEqual(seg, Segment(x1, y2, x2, y1))
+    
+    def test_x_length(self):
+        x1 = 0
+        x2 = 1
+        y1 = 2
+        y2 = 3
+        seg = Segment(x1, y1, x2, y2)
+        self.assertEqual(seg.x_length, 1)
+
+    def test_y_length(self):
+        x1 = 0
+        x2 = 1
+        y1 = 2
+        y2 = 3
+        seg = Segment(x1, y1, x2, y2)
+        self.assertEqual(seg.y_length, 1)

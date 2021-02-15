@@ -11,13 +11,17 @@ class TestFastLineDetector(unittest.TestCase):
     """Test the FastLineDetector class."""
     def test__init__(self):
         with self.assertRaises(ValueError):
-            fld = FastLineDetector(length_threshold=0)
+            fld = FastLineDetector(length_threshold=-1)
         with self.assertRaises(ValueError):
             fld = FastLineDetector(distance_threshold=-1)
         with self.assertRaises(ValueError):
             fld = FastLineDetector(canny_th1=-1)
         with self.assertRaises(ValueError):
             fld = FastLineDetector(canny_th2=-1)
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(xlen_threshold=-1)
+        with self.assertRaises(ValueError):
+            fld = FastLineDetector(ylen_threshold=-1)
 
     def test_FLD_const_color(self):
         img = np.ones([30,30]).astype(np.uint8)
@@ -49,7 +53,7 @@ class TestFastLineDetector(unittest.TestCase):
     
     def test_FLD_with_high_threshold(self):
         img = np.eye(30).astype(np.uint8)
-        fld = FastLineDetector(length_threshold=40, canny_aperture_size=0)
+        fld = FastLineDetector(length_threshold=40, xlen_threshold=40, ylen_threshold=40, canny_aperture_size=0)
         with self.assertRaises(LineNotFound):
             segments, _ = fld.detect(img)
 
