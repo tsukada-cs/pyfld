@@ -38,6 +38,12 @@ class Segment(list):
     def length(self):
         return np.sqrt((self.x2-self.x1)**2 + (self.y2-self.y1)**2)
     @property
+    def y_length(self):
+        return abs(self.y2-self.y1)
+    @property
+    def x_length(self):
+        return abs(self.x2-self.x1)
+    @property
     def p1(self):
         return Point(self.x1, self.y1)
     @property
@@ -50,32 +56,41 @@ class Segment(list):
 
 class FastLineDetector:    
     def __init__(self, length_threshold=10, distance_threshold=1.414213562,
-                canny_th1=50.0, canny_th2=50.0, canny_aperture_size=3, do_merge=False):
+                canny_th1=50.0, canny_th2=50.0, canny_aperture_size=3, do_merge=False,
+                xlen_threshold=0, ylen_threshold=0):
         """
         Parameters
         ----------
-         length_threshold : int, default 10
+        length_threshold : int or float, default 10
             Segment shorter than this will be discarded.
-         distance_threshold : int or float, default 1.41421356
+        distance_threshold : int or float, default 1.41421356
             A point placed from a hypothesis line segment farther than this will be regarded as an outlier.
-         canny_th1 : int or float, default 50
+        canny_th1 : int or float, default 50
             First threshold for hysteresis procedure in cv2.canny().
-         canny_th2 : int or float, default 50
+        canny_th2 : int or float, default 50
             Second threshold for hysteresis procedure in cv2.canny().
-         canny_aperture_size : int, default 3
+        canny_aperture_size : int, default 3
             Aperturesize for the sobel operator in cv2.canny().
             If zero, Canny() is not applied and the input image is taken as an edge image. 
-         do_merge : bool, default False
+        do_merge : bool, default False
             If true, incremental merging of segments will be perfomred.
+        xlen_threshold : int or float, default 0
+            Segment shorter than this along x-axis will be discarded.
+        ylen_threshold : int or float, default 0
+            Segment shorter than this along y-axis will be discarded.
         """
-        if (length_threshold <= 0):
-            raise ValueError("length_threshold must be positive.")
+        if (length_threshold < 0):
+            raise ValueError("length_threshold must not be negative.")
         if (distance_threshold < 0):
             raise ValueError("distance_threshold must not be negative.")
         if (canny_th1 < 0):
             raise ValueError("canny_th1 must not be negative.")
         if (canny_th2 < 0):
             raise ValueError("canny_th2 must not be negative.")
+        if (xlen_threshold < 0):
+            raise ValueError("xlen_threshold must not be negative.")
+        if (ylen_threshold < 0):
+            raise ValueError("ylen_threshold must not be negative.")
 
         self.length_threshold = length_threshold
         self.distance_threshold = distance_threshold
@@ -83,6 +98,8 @@ class FastLineDetector:
         self.canny_th2 = canny_th2
         self.canny_aperture_size = canny_aperture_size
         self.do_merge = do_merge
+        self.xlen_threshold = xlen_threshold
+        self.ylen_threshold = ylen_threshold
 
     def detect(self, image):
         """
@@ -141,7 +158,7 @@ class FastLineDetector:
                     continue
 
                 for seg in segments:
-                    if seg.length < self.length_threshold:
+                    if (seg.length < self.length_threshold) or (seg.x_length < self.xlen_threshold) or (seg.y_length < self.ylen_threshold):
                         continue
                     if (seg.x1 <= 4 and seg.x2 <= 4) or (seg.y1 <= 4 and seg.y2 <= 4) or (seg.x1 >= self._w-5 and seg.x2 >= self._w-5) or (seg.y1 >= self._h-5 and seg.y2 >= self._h-5):
                         continue
